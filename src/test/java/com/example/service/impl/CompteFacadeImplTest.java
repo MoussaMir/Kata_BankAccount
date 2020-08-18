@@ -5,6 +5,8 @@ import static org.junit.Assert.assertEquals;
 import org.junit.Before;
 import org.junit.Test;
 
+import com.example.bank.exception.InvalidCompteException;
+import com.example.bank.exception.SoldeInsuffisantException;
 import com.example.bank.model.Compte;
 import com.example.bank.service.impl.CompteFacadeImpl;
 
@@ -19,21 +21,37 @@ public class CompteFacadeImplTest {
 	@Test
 	public void testDebiter() {
 		// given
-		Compte compte1 = new Compte("C1", 3000);
+		Compte compte = new Compte("C1", 3000);
 		// Act
-		compteFacade.debiter(compte1, 300);
+		compteFacade.debiter(compte, 300);
 		// Assert
-		assertEquals("Solde du compte pas correct", 3300, compte1.getSolde(), 0);
+		assertEquals("Solde du compte pas correct", 3300, compte.getSolde(), 0);
 	}
 
 	@Test
 	public void testCrediter() {
 		// given
-		Compte compte1 = new Compte("C1", 2000);
+		Compte compte = new Compte("C2", 2000);
 		// Act
-		compteFacade.crediter(compte1, 200);
+		compteFacade.crediter(compte, 200);
 		// Assert
-		assertEquals("Solde du compte pas correct", 1800, compte1.getSolde(), 0);
+		assertEquals("Solde du compte pas correct", 1800, compte.getSolde(), 0);
 	}
 
+	@Test(expected = SoldeInsuffisantException.class)
+	public void testCrediterWhenSoldeInsuffisant() {
+		// given
+		Compte compte = new Compte("C3", 120);
+		// Act
+		compteFacade.crediter(compte, 200);
+
+	}
+	
+	@Test(expected = InvalidCompteException.class)
+	public void testCrediterwhenCompteNull() {
+		// given
+		Compte compte = null;
+		// Act
+		compteFacade.crediter(compte, 200);
+	}
 }

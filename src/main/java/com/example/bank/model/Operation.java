@@ -4,8 +4,9 @@ import java.util.Date;
 
 public class Operation {
 	private String id;
-	private Double montant;
+	private float montant;
 	private Date date;
+	private OperationType type;
 	
 	public String getId() {
 		return id;
@@ -13,10 +14,10 @@ public class Operation {
 	public void setId(String id) {
 		this.id = id;
 	}
-	public Double getMontant() {
+	public float getMontant() {
 		return montant;
 	}
-	public void setMontant(Double montant) {
+	public void setMontant(float montant) {
 		this.montant = montant;
 	}
 	public Date getDate() {
@@ -25,7 +26,16 @@ public class Operation {
 	public void setDate(Date date) {
 		this.date = date;
 	}
-	
-	
+	public OperationType getType() {
+		return type;
+	}
+	public void setType(OperationType type) {
+		this.type = type;
+	}
+	public Operation(float montant, OperationType type) {
+		super();
+		this.montant = montant;
+		this.type = type;
+	}
 	
 }
