@@ -1,6 +1,7 @@
 package com.example.bank.service.impl;
 
 import com.example.bank.exception.InvalidCompteException;
+import com.example.bank.exception.NotImplementedYetException;
 import com.example.bank.exception.SoldeInsuffisantException;
 import com.example.bank.model.Compte;
 import com.example.bank.model.Operation;
@@ -19,20 +20,27 @@ public class CompteFacadeImpl implements CompteFacade {
 		executeOperation(operation, compte);
 	}
 
-	private void executeOperation(Operation operation, Compte compte) {
+	private boolean executeOperation(Operation operation, Compte compte) {
+		boolean operationDone = false;
 		if (compte == null)
 			throw new InvalidCompteException("le compte ne peut pas être null");
 
 		if (OperationType.CREDIT.equals(operation.getType())) {
+			compte.setSolde(compte.getSolde() + operation.getMontant());
+			operationDone = true;
+		} else if (OperationType.DEBIT.equals(operation.getType())) {
 			if (compte.getSolde() >= operation.getMontant()) {
 				compte.setSolde(compte.getSolde() - operation.getMontant());
+				operationDone = true;
 			} else {
 				throw new SoldeInsuffisantException("le montant demandé est supérieur à votre solde");
 			}
-		} else if (OperationType.DEBIT.equals(operation.getType())) {
-			compte.setSolde(compte.getSolde() + operation.getMontant());
 		}
+		return operationDone;
 	}
 
+	public void virement(Compte compteSource, Compte comptetarget, float montant) {
+		throw new NotImplementedYetException("la méthode 'Virement' n'est pas encore implementée");
+	}
 
 }
