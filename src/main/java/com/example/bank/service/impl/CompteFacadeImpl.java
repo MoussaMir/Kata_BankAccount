@@ -1,7 +1,6 @@
 package com.example.bank.service.impl;
 
 import com.example.bank.exception.InvalidCompteException;
-import com.example.bank.exception.NotImplementedYetException;
 import com.example.bank.exception.SoldeInsuffisantException;
 import com.example.bank.model.Compte;
 import com.example.bank.model.Operation;
@@ -40,7 +39,11 @@ public class CompteFacadeImpl implements CompteFacade {
 	}
 
 	public void virement(Compte compteSource, Compte comptetarget, float montant) {
-		throw new NotImplementedYetException("la méthode 'Virement' n'est pas encore implementée");
+		Operation operationDebit = new Operation(montant, OperationType.DEBIT);
+		if (executeOperation(operationDebit, compteSource)) {
+			Operation operationCredit = new Operation(montant, OperationType.CREDIT);
+			executeOperation(operationCredit, comptetarget);
+		}
 	}
 
 }
