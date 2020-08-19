@@ -1,4 +1,4 @@
-package com.example.service.impl;
+package com.example.bank.service.impl;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
