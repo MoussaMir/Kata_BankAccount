@@ -12,7 +12,7 @@ public class CacheHelper {
 	private CacheManager cacheManager;
 	private Cache<String, TransactionList> transactionHistoryCache;
 
-	private static CacheHelper INSTANCE = new CacheHelper();
+	private static CacheHelper singleton = new CacheHelper();
 
 	private CacheHelper() {
 		cacheManager = CacheManagerBuilder.newCacheManagerBuilder().build();
@@ -22,11 +22,11 @@ public class CacheHelper {
 				.newCacheConfigurationBuilder(String.class, TransactionList.class, ResourcePoolsBuilder.heap(10)));
 	}
 
-	public  Cache<String, TransactionList> getTransactionHistoryCacheFromCacheManager() {
+	public Cache<String, TransactionList> getTransactionHistoryCacheFromCacheManager() {
 		return cacheManager.getCache("transactionHistory", String.class, TransactionList.class);
 	}
 
 	public static CacheHelper getInstance() {
-		return INSTANCE;
+		return singleton;
 	}
 }

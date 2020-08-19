@@ -20,18 +20,32 @@ public class CompteFacadeImpl implements CompteFacade {
 
 	private static List<Transaction> transactions = new ArrayList<>();
 
+	/**
+	 * @param compte  concerné par l'operation
+	 * @param montant de l'operation
+	 */
 	@Override
 	public void debiter(Compte compte, float montant) {
 		Operation operation = new Operation(montant, OperationType.DEBIT);
 		executeOperation(operation, compte);
 	}
 
+	/**
+	 * @param compte  concerné par l'operation
+	 * @param montant de l'operation
+	 */
 	@Override
 	public void crediter(Compte compte, float montant) {
 		Operation operation = new Operation(montant, OperationType.CREDIT);
 		executeOperation(operation, compte);
 	}
 
+	/**
+	 * 
+	 * @param operation à effectuer
+	 * @param compte    concerner
+	 * @return True si l'operation est bien efectuée et False sinon
+	 */
 	private boolean executeOperation(Operation operation, Compte compte) {
 		boolean operationDone = false;
 		if (compte == null) {
@@ -49,6 +63,11 @@ public class CompteFacadeImpl implements CompteFacade {
 		return operationDone;
 	}
 
+	/**
+	 * @param compteSource ou compte à débiter
+	 * @param compteTarget ou compte à créditer
+	 * @return True si le virement est bien efectué et False sinon
+	 */
 	@Override
 	public boolean virement(Compte compteSource, Compte comptetarget, float montant) {
 		boolean creditDone = false;
@@ -61,6 +80,11 @@ public class CompteFacadeImpl implements CompteFacade {
 		return debitDone && creditDone;
 	}
 
+	/**
+	 * @param compteSource
+	 * @param compteTarget
+	 * @return void => stocke la transaction dans le Cache
+	 */
 	@Override
 	public void storeTransaction(Compte compteSource, Compte compteTarget, float montant, StatutTransaction statut) {
 		Transaction transaction = new Transaction(compteSource, compteTarget, montant, statut, new Date());
@@ -69,6 +93,11 @@ public class CompteFacadeImpl implements CompteFacade {
 		CacheHelper.getInstance().getTransactionHistoryCacheFromCacheManager().put("virementHistory", listTransactions);
 	}
 
+	/**
+	 * @param compte1
+	 * @param compte2
+	 * @return historique des transactions communes de compte1 & compte2
+	 */
 	@Override
 	public List<Transaction> getTransactionHistorybetweenAccounts(Compte compte1, Compte compte2) {
 		if (compte1 == null || compte2 == null) {
@@ -80,6 +109,12 @@ public class CompteFacadeImpl implements CompteFacade {
 				: list.stream().filter(betweenSpecifiedAccounts(compte1, compte2)).collect(Collectors.toList());
 	}
 
+	/**
+	 * 
+	 * @param c1 compte 1
+	 * @param c2 compte 2
+	 * @return Predicate
+	 */
 	private Predicate<Transaction> betweenSpecifiedAccounts(Compte c1, Compte c2) {
 		return t -> t.getCompteCredite().equals(c1) && t.getCompteDebite().equals(c2)
 				|| t.getCompteCredite().equals(c2) && t.getCompteDebite().equals(c1);
